@@ -355,6 +355,7 @@ class Builder:
                 "/system/bin/classic-retroidpad": (controller, "0100755"),
                 "/system/bin/classic-hardware.sh": ((ROOT / "device/classic-hardware.sh").read_bytes(), "0100755"),
                 "/system/bin/classic-time.sh": ((ROOT / "device/classic-time.sh").read_bytes(), "0100755"),
+                "/system/bin/classic-shaders.sh": ((ROOT / "device/classic-shaders.sh").read_bytes(), "0100755"),
                 "/system/bin/classic-provision.sh": ((ROOT / "device/classic-provision.sh").read_bytes(), "0100755"),
                 "/system/bin/classic-power.sh": ((ROOT / "device/classic-power.sh").read_bytes(), "0100755"),
                 "/system/bin/classic-charger-probe.sh": ((ROOT / "device/classic-charger-probe.sh").read_bytes(), "0100755"),

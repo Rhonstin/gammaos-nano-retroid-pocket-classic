@@ -90,6 +90,9 @@ on property:sys.boot_completed=1
 on property:persist.gammaos.setupwizard_done=1 && property:sys.boot_completed=1
     start classic-provision
 
+on property:persist.gammaos.nano.setup_done=1 && property:sys.boot_completed=1
+    start classic-provision
+
 # GammaPad handles remapping and routes force feedback through the framework bridge.
 on property:init.svc.classic-controller=running && property:persist.gammaos.gamepad.enable=1
     start gammapad

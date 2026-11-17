@@ -4,10 +4,11 @@ Unofficial development port of **GammaOS Nano 1.4.1 / GammaOS Core / Android 14*
 for the original, four-button Retroid Pocket Classic (`parrot`, board ID `<0x22 0>`).
 The port uses the original native Nano interface and emulator integration.
 
-**Current checkpoint: `1.4.1-dev.23`.** Permanently installed and tested on one
+**Packaged checkpoint: `1.4.1-dev.23`.** Permanently installed and tested on one
 original Classic. Off-mode battery animation, screen blank/wake and manual
 long-Power return to Nano have been confirmed by the owner. USB OTG storage
 remains untested. Rev Q (`<0x1000b 0>`) is not supported by this profile.
+Dev.24 adds emulator shader defaults to the setup flow.
 
 This repository integrates pinned public release images; it is **not a complete
 AOSP source build**. It retains the Classic vendor/kernel and existing unlocked
@@ -22,6 +23,7 @@ bootloader. The resulting image uses an AVB integrity hashtree with authenticati
 - [Update an existing installation / initial-install scope](docs/INSTALLING.md)
 - [Hardware validation and known limits](docs/VALIDATION.md)
 - [Integration architecture](docs/ARCHITECTURE.md)
+- [Dev.24 emulator display defaults](docs/SHADERS.md)
 - [NFS compatibility fixes](docs/NFS.md)
 - [Prepare a GitHub publication](docs/PUBLISHING.md)
 - [Коротко українською](docs/README.uk.md)
@@ -49,7 +51,7 @@ On Linux, install the [documented prerequisites](docs/BUILDING.md), then run:
 ```sh
 python3 tools/prepare_references.py --download
 python3 tools/prepare_android_tools.py --download
-python3 tools/build_candidate.py --output out/port-1.4.1-dev.23
+python3 tools/build_candidate.py --output out/my-candidate
 python3 -m unittest discover -s tests -v
 ```
 

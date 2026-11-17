@@ -19,6 +19,8 @@ if [ -d "$retro" ] && [ -f "$cfg" ]; then
     restorecon "$cfg" || exit 1
 fi
 
+/system/bin/sh /system/bin/classic-shaders.sh || log -t ClassicProvision "Shader setup will retry on next boot"
+
 if ! pm path "$PACKAGE" | grep -q '^package:'; then
     setprop sys.gammaos.classic.launcher_ready installing
     session=$(pm install-create -r | sed -n 's/.*\[\([0-9][0-9]*\)\].*/\1/p')

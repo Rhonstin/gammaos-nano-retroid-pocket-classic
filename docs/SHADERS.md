@@ -1,0 +1,42 @@
+# Classic display profiles
+
+Dev.24 applies the following defaults after Nano setup, when the bundled
+emulator profiles are available. The original Classic's 1240×1080 display has
+room for a light pixel grid or scanline effect. The defaults favor one pass,
+steady frame pacing, and legible pixel art.
+
+| Emulator or core family | Default |
+| --- | --- |
+| RetroArch GB/GBC/GBA, Lynx, Neo Geo Pocket and WonderSwan cores in the setup table | LCD Grid v2. The neutral grid leaves the core's palette and color correction in charge. |
+| RetroArch NES, SNES, Mega Drive, Master System, PC Engine and supported 2D arcade cores | CRT EasyMode. One pass adds scanlines and a light CRT effect. An existing valid Snes9x preset takes precedence. |
+| RetroArch PS1, DS, Game Gear, widescreen Genesis Plus GX and FAKE-08 entries | Sharp Bilinear. This limits scaling shimmer without adding a TV mask to 3D or small dual-screen layouts. |
+| RetroArch N64, Dreamcast, PSP and unlisted cores | Existing renderer and filtering. The setup does not add a new core shader to these. |
+| PPSSPP 1.20.3 standalone | Sharp Bilinear Upscaler for the bundled 1× profile. Existing shader chains and game-specific settings take precedence. |
+| DraStic standalone | The bundled 2xPrescaleFast_LCD remains the initial preset. |
+| Flycast standalone | The bundled 480-line render profile with native filtering and no additional postprocessing pass. |
+| Mupen64Plus AE standalone | The bundled 480-line profile and hybrid texture filter. |
+
+RetroArch uses Slang for Vulkan/OpenGL Core and GLSL for legacy OpenGL. Automatic
+core presets are written only when enabled and the matching shader asset exists.
+Existing presets and a global user preset take precedence. Two shipped presets
+(mGBA and SwanStation) referenced a missing file. Setup replaces those exact
+broken references. Game and content-directory presets retain RetroArch's usual
+precedence. See [Libretro shader presets](https://docs.libretro.com/guides/shaders/)
+and [PPSSPP graphics settings](https://www.ppsspp.org/docs/settings/graphics/).
+
+Each app is provisioned once. Changes made through the emulator UI afterward
+are kept. In RetroArch use **Quick Menu → Shaders → Save** for a core or game
+preset. In PPSSPP use **Graphics → Display layout & effects → Postprocessing
+shaders**. In DraStic use its own video filter menu. Avoid enabling Nano's
+global shader on top of an emulator effect unless you want both passes.
+
+RetroArch runtime logs on the test Classic confirmed LCD Grid v2 compiled in
+Gambatte and mGBA and CRT EasyMode compiled in Nestopia. These are representative
+runtime checks. The remaining core mappings share those bundled effects or the
+Sharp Bilinear preset and have not all been benchmarked game by game.
+
+Dev.24 was installed as a data-preserving update. The full system partition
+matched the built image, Nano completed its boot, and the installed setup
+service regenerated the Gambatte preset when it was removed during the test.
+PPSSPP retained the scaler setting and booted a test game. The setup service
+was exercised on the existing installation without a factory reset.
