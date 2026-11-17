@@ -1,0 +1,95 @@
+# The MCU is connected to ttyHS1; its original daemon was in Retroid's system image.
+service classic-controller /system/bin/classic-retroidpad "Retroid Pocket Controller"
+    class core
+    user root
+    group root system input
+    seclabel u:r:su:s0
+    disabled
+    restart_period 1
+
+service classic-hardware /system/bin/sh /system/bin/classic-hardware.sh
+    class late_start
+    user root
+    group root system input
+    seclabel u:r:su:s0
+    disabled
+    restart_period 3
+
+service classic-time /system/bin/sh /system/bin/classic-time.sh
+    class late_start
+    user root
+    group root system inet
+    seclabel u:r:su:s0
+    disabled
+    restart_period 30
+
+service classic-provision /system/bin/sh /system/bin/classic-provision.sh
+    user root
+    group root system
+    seclabel u:r:su:s0
+    disabled
+    oneshot
+
+service classic-nano-reboot /system/bin/sh /system/bin/classic-power.sh reboot
+    user root
+    group root system media_rw
+    seclabel u:r:su:s0
+    disabled
+    oneshot
+
+service classic-nano-shutdown /system/bin/sh /system/bin/classic-power.sh shutdown
+    user root
+    group root system media_rw
+    seclabel u:r:su:s0
+    disabled
+    oneshot
+
+# Android 14 HealthLoop uses CLOCK_BOOTTIME_ALARM; vendor's Android 12
+# definition granted only SYS_BOOT and timerfd_create consequently failed.
+service classic-charger /system/bin/charger
+    class charger
+    user system
+    group system graphics input
+    capabilities SYS_BOOT WAKE_ALARM BLOCK_SUSPEND
+    seclabel u:r:charger:s0
+    setenv CLASSIC_CHARGER_SERVICE 21
+    setenv LD_PRELOAD /system/lib64/classic-charger-ioctl.so
+    disabled
+
+service classic-charger-prepare /system/bin/sh /system/bin/classic-charger-prepare.sh
+    user root
+    group root system
+    seclabel u:r:su:s0
+    disabled
+    oneshot
+
+# Exits immediately unless a root-only, one-use marker was armed in /metadata.
+# Never mounts userdata or enables ADB in off-mode.
+service classic-charger-probe /system/bin/sh /system/bin/classic-charger-probe.sh
+    user root
+    group root system input
+    seclabel u:r:su:s0
+    disabled
+    oneshot
+
+on post-fs
+    start classic-controller
+
+# Keep the vendor light HAL available for the original charger's AIDL queries.
+# The Classic ioctl adapter controls actual panel brightness; this vendor's
+# generic light HAL does not drive panel0-backlight.
+on charger
+    start vendor.qti.light
+    start classic-charger-probe
+
+on property:sys.boot_completed=1
+    start classic-hardware
+    start classic-time
+    start classic-provision
+
+on property:persist.gammaos.setupwizard_done=1 && property:sys.boot_completed=1
+    start classic-provision
+
+# GammaPad handles remapping and routes force feedback through the framework bridge.
+on property:init.svc.classic-controller=running && property:persist.gammaos.gamepad.enable=1
+    start gammapad

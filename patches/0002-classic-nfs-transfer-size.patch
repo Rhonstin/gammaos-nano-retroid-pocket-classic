@@ -1,0 +1,22 @@
+Core 1.4.1 libnfs rejects fragmented RPC record markers. UNFS3/libtirpc
+fragments large replies at 64 KiB. Conservative 32 KiB transfers avoid
+this failure without changing the RPC ABI or adding runtime privileges.
+This is a bounded compatibility workaround, not general fragment support.
+
+Source equivalent for sahlberg/libnfs libnfs-6.0.2, lib/libnfs.c.
+The release-image integrator changes the corresponding pinned arm64 MOV
+immediate after checking the entire original library SHA256.
+
+--- a/lib/libnfs.c
++++ b/lib/libnfs.c
+@@ -623,8 +623,8 @@
+ 
+ 	nfs->nfsi->default_version = NFS_V3;
+ 	nfs->nfsi->version = NFS_V3;
+-	nfs->nfsi->readmax = NFS_DEF_XFER_SIZE;
+-	nfs->nfsi->writemax = NFS_DEF_XFER_SIZE;
++	nfs->nfsi->readmax = 32 * 1024;
++	nfs->nfsi->writemax = 32 * 1024;
+ 	nfs->nfsi->readdir_dircount = 8192;
+ 	nfs->nfsi->readdir_maxcount = 8192;
+ 

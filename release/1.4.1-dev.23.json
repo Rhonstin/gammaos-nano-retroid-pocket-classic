@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "version": "1.4.1-dev.23",
+  "validated_on": "2026-11-17",
+  "target": "Original four-button Retroid Pocket Classic, board <0x22 0>",
+  "hardware": {
+    "codename": "parrot",
+    "board_id": [
+      34,
+      0
+    ],
+    "soc": "SG4250P",
+    "vendor_mapping": "32.0",
+    "kernel": "5.10.209-android12"
+  },
+  "method": "Pinned public Core 1.4.1 image integration, not an AOSP source build",
+  "artifacts": {
+    "system.img": {
+      "size": 3035340800,
+      "sha256": "1402cec7998595acfb45ac1d69810d9f0ec9844341918668edc4dacfa6b44987"
+    },
+    "system.sparse.img": {
+      "size": 2986990528,
+      "sha256": "7880066ea42807fcdf0f562613ac7f09112b802739b81f648dc93bd917c765dc"
+    }
+  },
+  "avb_authentication": "NONE",
+  "validated": {
+    "permanent_native_boot": true,
+    "full_system_partition_hash_match": true,
+    "charger_automatic_off_mode": true,
+    "owner_battery_image_and_short_power_blank_wake": true,
+    "owner_manual_long_power_return_to_nano": true,
+    "nfs_complete_listing_259_files": true,
+    "nfs_1MiB_read_write_range_rename_mkdir_delete": true,
+    "ftp_and_implicit_ftps_scenarios": true,
+    "host_tests_before_publication_packaging": 25,
+    "publication_host_tests_with_pinned_core": 31
+  },
+  "remaining_validation": [
+    "Real USB OTG storage medium/adapter unavailable; not tested"
+  ],
+  "nfs_library_sha256": "551a97a831d5b79a8992d0f4814bc2172b1d11e8cc7eebf472056a0ff2741aff",
+  "known_limits": [
+    "Tested on one original Classic; Rev Q excluded",
+    "NFS 32KiB transfer workaround is not general RPC fragment reassembly",
+    "Core uses implicit FTPS, not explicit AUTH TLS",
+    "GammaBrowser cleartext HTTP is blocked",
+    "Full manufacturer factory restoration not tested"
+  ]
+}

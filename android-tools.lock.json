@@ -1,0 +1,22 @@
+{
+  "r8": {
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/r8/8.3.37/r8-8.3.37.jar",
+    "file": "out/android-helper/r8.jar",
+    "sha256": "59753e70a74f918389cc87f1b7d66b5c0862932559167425708ded159e3de439",
+    "size": 16628796
+  },
+  "sdk-platform": {
+    "url": "https://dl.google.com/android/repository/platform-34-ext7_r03.zip",
+    "file": "downloads/platform-34-ext7_r03.zip",
+    "sha256": "16fdb74c55e59ae3ef52def135aec713508467bd56d7dabcd8c9be31fa8b20f3",
+    "extract_to": "out/android-sdk",
+    "size": 63180081
+  },
+  "sdk-build-tools": {
+    "url": "https://dl.google.com/android/repository/build-tools_r35_linux.zip",
+    "file": "downloads/build-tools_r35_linux.zip",
+    "sha256": "bd3a4966912eb8b30ed0d00b0cda6b6543b949d5ffe00bea54c04c81e1561d88",
+    "extract_to": "out/android-sdk",
+    "size": 61958799
+  }
+}

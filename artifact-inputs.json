@@ -1,0 +1,26 @@
+{
+  "out/reference-gkd/partitions/system.img": {
+    "sha256": "ff221e87f58ae6a67557df77c4cfc11f8ff59d371b159fa27e44c32a2f537379",
+    "size": 2992017408
+  },
+  "out/reference-classic/Retroid_Pocket_Classic_GammaOSNext_Lite_v1/flash/boot_custom.img": {
+    "sha256": "16be8b307ff193d36f8e25348c50db31244a0555796402c47b114a21b9475630",
+    "size": 100663296
+  },
+  "out/reference-classic/Retroid_Pocket_Classic_GammaOSNext_Lite_v1/flash/dtbo_custom.img": {
+    "sha256": "53c1c0f5d3200daa95798fa5194bfb04fd4b97c73a76c5ebd96394861ccf0a85",
+    "size": 25165824
+  },
+  "out/reference-classic/Retroid_Pocket_Classic_GammaOSNext_Lite_v1/flash/system_custom.img": {
+    "sha256": "94be2feef887557ea95c7a8b212a14dcb470dbb5f676b6e64508067472a64c6a",
+    "size": 3252342784
+  },
+  "out/reference-classic/Retroid_Pocket_Classic_GammaOSNext_Lite_v1/flash/vendor_boot_custom.img": {
+    "sha256": "e98e6ecdc594feb13c743e67d69b508465e51b9badf88b504779e3f84f5fc7b0",
+    "size": 100663296
+  },
+  "out/reference-classic/Retroid_Pocket_Classic_GammaOSNext_Lite_v1/flash/vendor_custom.img": {
+    "sha256": "c1471d899569c935bde7bee740a1c37f69ac354600e3a20236cbe68a88146054",
+    "size": 737280000
+  }
+}

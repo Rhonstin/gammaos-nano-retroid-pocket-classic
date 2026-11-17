@@ -1,0 +1,30 @@
+name: Bug report
+description: Report a reproducible port issue
+body:
+  - type: input
+    id: build
+    attributes:
+      label: Port version
+      placeholder: 1.4.1-dev.23
+    validations:
+      required: true
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware and installation
+      description: Original Classic or other revision, board ID if known, retained vendor/kernel, and update or initial install. Omit your device serial.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps and observed result
+      description: Include USB connection state and exact screen for boot/charging issues.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Reviewed diagnostic excerpt
+      description: Remove personal identifiers, Wi-Fi names/keys, account details and private paths before posting.
+

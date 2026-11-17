@@ -1,0 +1,20 @@
+# Original Pocket Classic bring-up; keep the vendor's parrot platform identity.
+ro.product.device=parrot
+ro.product.model=Retroid Pocket Classic
+ro.product.manufacturer=Moorechip
+ro.gammaos.device=retroidpocketclassic-nano-development
+ro.gammaos.port.version=1.4.1-dev.23
+ro.gammaos.port.status=unverified-hardware
+persist.bootanim.skip_nano=0
+persist.gammaos.nano.force_sf=1
+persist.sys.vndk=32
+persist.gammaos.fan_mode=auto
+persist.gammaos.performance_mode=stock
+persist.gammaos.gamepad.enable=1
+ro.surface_flinger.primary_display_orientation=ORIENTATION_90
+ro.input_flinger.primary_touch_orientation=ORIENTATION_90
+persist.gammaos.nano.fontscale=1.0
+# Core 1.4.1 skips ART manager initialization in minimal boot. Replacing an
+# incremental APK then crashes system_server while deleting its dex artifacts.
+# Ordinary APK delivery remains available; avoid creating incremental packages.
+ro.incremental.enable=false

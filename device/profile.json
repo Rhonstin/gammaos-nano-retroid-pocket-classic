@@ -1,0 +1,32 @@
+{
+  "name": "Retroid Pocket Classic original",
+  "codename": "parrot",
+  "architecture": "arm64-v8a",
+  "board_id": [
+    34,
+    0
+  ],
+  "excluded_board_ids": [
+    [
+      65547,
+      0
+    ]
+  ],
+  "known_device": {
+    "buttons": 4,
+    "soc": "SG4250P",
+    "soc_id": 654,
+    "stock_build": "RPClassic_V1.0.0.84_20250618_122028_user",
+    "stock_kernel": "5.10.209-android12-9-ge986468a683e-dirty",
+    "source": "Single-device hardware validation summarized in docs/VALIDATION.md",
+    "observed_at": "2026-11-10",
+    "current_connection_verified": false
+  },
+  "bringup": {
+    "display_backend": "surfaceflinger",
+    "audio_backend": "vendor HAL / AAudio",
+    "kernel_and_vendor": "retain original Classic stock components; vendor mapping 32.0 and kernel 5.10 validated on one unit",
+    "bootloader": "retain existing unlocked bootloader; no bootloader image included",
+    "status": "development; permanent boot validated on one original Classic; AVB authentication NONE"
+  }
+}

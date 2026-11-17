@@ -1,0 +1,20 @@
+[
+  {
+    "name": "GKD_350H_Ultra_GammaOS_Nano_v1.4.1.7z.001",
+    "size": 1977804332,
+    "browser_download_url": "https://github.com/TheGammaSqueeze/GammaOSNext/releases/download/v1.4.1-GKD350HULTRA/GKD_350H_Ultra_GammaOS_Nano_v1.4.1.7z.001",
+    "digest": "sha256:f73b38e3c8faf0ec88ed3899e9609a210ec5eaa57fe69fb6677aaf23922a7107",
+    "release_url": "https://github.com/TheGammaSqueeze/GammaOSNext/releases/tag/v1.4.1-GKD350HULTRA",
+    "tag": "v1.4.1-GKD350HULTRA",
+    "public_archive_password": "YATpU5ulYNx401dbOeYW1m1CoRsffR2MIoIWVe8r4Bn1vfXCZz"
+  },
+  {
+    "name": "Retroid_Pocket_Classic_GammaOSNext_Lite_v1.7z.001",
+    "size": 1898099665,
+    "browser_download_url": "https://github.com/TheGammaSqueeze/GammaOSNext/releases/download/v.1.0.0-RETROIDPOCKETCLASSIC/Retroid_Pocket_Classic_GammaOSNext_Lite_v1.7z.001",
+    "digest": "sha256:f8db1d4901f6edb0e3ca1e501a73f7ee96fd5c0e85e19ef7494b6ce71592f299",
+    "release_url": "https://github.com/TheGammaSqueeze/GammaOSNext/releases/tag/v.1.0.0-RETROIDPOCKETCLASSIC",
+    "tag": "v.1.0.0-RETROIDPOCKETCLASSIC",
+    "public_archive_password": "WOZzBUCDGvgHB1ODUDVBHZb6nz6OWHsX7TGta7U9c7Wt3F8Nb5"
+  }
+]

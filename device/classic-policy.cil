@@ -1,0 +1,28 @@
+; Nano uses bootanim for its native home. Its cmd and NDK media clients pass
+; descriptors to Android services, and shell ResultReceiver calls return here.
+; Stock Classic enforces the receiving domains, even though Nano's own domain
+; is permissive in the upstream Core image. Keep the receiving types explicit.
+(allow system_server bootanim (fd (use)))
+; popen() creates its output pipe in Nano's domain. Receiving the descriptor
+; also checks write access to that pipe, separately from the fd-use permission.
+(allow system_server bootanim (fifo_file (write)))
+(allow system_server bootanim (binder (call transfer)))
+(allow audioserver bootanim (fd (use)))
+(allow mediaextractor bootanim (fd (use)))
+(allow mediaserver bootanim (fd (use)))
+(allow mediacodec bootanim (fd (use)))
+; NDK extractor/codec clients receive Binder objects and callbacks in Nano.
+; Without these replies, the stock media domains reject the native client;
+; Codec2's IConfigurable check then aborts the launcher during media playback.
+(allow mediaextractor bootanim (binder (call transfer)))
+(allow mediaserver bootanim (binder (call transfer)))
+(allow mediacodec bootanim (binder (call transfer)))
+(allow mediaswcodec bootanim (binder (call transfer)))
+(allow mediaswcodec bootanim (fd (use)))
+; The charger entry preserves the vendor service's credentials and executes
+; the original native charger in the same domain.
+(allow charger charger_exec (file (execute_no_trans)))
+(allow charger self (capability2 (wake_alarm)))
+; The QTI light HAL ignores BACKLIGHT on this vendor; minui's generic LED
+; paths are absent. The Classic adapter writes the actual system-owned node.
+(allow charger vendor_sysfs_graphics (file (read write open getattr)))

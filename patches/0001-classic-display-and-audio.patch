@@ -1,0 +1,40 @@
+--- a/frameworks/base/cmds/gammaos-nano/main.cpp
++++ b/frameworks/base/cmds/gammaos-nano/main.cpp
+@@ -1124,11 +1124,13 @@
+         // default-on. (persist props are not loaded this early, so main() keys on the
+         // SoC string; the persist override is also honored later in readyToRun.)
+         bool forceSf = property_get_bool("persist.gammaos.nano.force_sf", false) ||
++                       strcmp(platform, "parrot") == 0 ||
+                        strstr(platform, "ums") != nullptr ||
+                        strstr(platform, "sc98") != nullptr ||
+                        strstr(platform, "sc99") != nullptr ||
+                        strstr(platform, "sharkl") != nullptr;
+-        bool isQualcomm = (strstr(platform, "bengal") != nullptr ||
++        bool isQualcomm = (strcmp(platform, "parrot") == 0 ||
++                           strstr(platform, "bengal") != nullptr ||
+                            strstr(platform, "msm") != nullptr ||
+                            strstr(platform, "sdm") != nullptr ||
+                            strstr(platform, "sm") == platform ||
+--- a/frameworks/base/cmds/gammaos-nano/NanoMenu.cpp
++++ b/frameworks/base/cmds/gammaos-nano/NanoMenu.cpp
+@@ -428,7 +428,8 @@
+     if (property_get_bool("persist.gammaos.nano.force_sf", false)) return true;
+     char platform[PROPERTY_VALUE_MAX] = {};
+     property_get("ro.board.platform", platform, "");
+-    return strstr(platform, "ums") != nullptr ||
++    return strcmp(platform, "parrot") == 0 ||
++           strstr(platform, "ums") != nullptr ||
+            strstr(platform, "sc98") != nullptr ||
+            strstr(platform, "sc99") != nullptr ||
+            strstr(platform, "sharkl") != nullptr;
+--- a/frameworks/base/cmds/gammaos-nano/NanoBootChime.cpp
++++ b/frameworks/base/cmds/gammaos-nano/NanoBootChime.cpp
+@@ -486,7 +486,7 @@
+     if (cached < 0) {
+         char p[PROPERTY_VALUE_MAX] = {};
+         property_get("ro.board.platform", p, "");
+-        cached = (strstr(p, "trinket") || strstr(p, "bengal") || strstr(p, "msm") || strstr(p, "sdm") ||
++        cached = (strcmp(p, "parrot") == 0 || strstr(p, "trinket") || strstr(p, "bengal") || strstr(p, "msm") || strstr(p, "sdm") ||
+                   strncmp(p, "sm", 2) == 0 || strstr(p, "lahaina") || strstr(p, "taro") || strstr(p, "kalama")) ? 1 : 0;
+     }
+     return cached == 1;

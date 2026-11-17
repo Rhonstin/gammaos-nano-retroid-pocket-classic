@@ -1,0 +1,25 @@
+# Downloaded inputs, working images and private device records
+/upstream
+/downloads
+/backups
+/evidence
+/out
+/private
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+*.img
+*.bin
+*.so
+*.apk
+*.jar
+*.7z*
+*.zip
+*.tar*
+*.part[0-9]*
+*.pcap*
+*.log
+.DS_Store
+
