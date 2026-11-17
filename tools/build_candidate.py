@@ -171,7 +171,9 @@ class Builder:
         self.log.write(result.stderr.decode(errors="replace"))
         self.log.flush()
         if result.returncode not in accepted:
-            raise RuntimeError(f"Command failed ({result.returncode}): {argv[0]}; see build.log")
+            detail = result.stderr.decode(errors="replace").strip()
+            raise RuntimeError(f"Command failed ({result.returncode}): {argv[0]}" +
+                               (f"\n{detail}" if detail else "; see build.log"))
         return result.stdout
 
     def read_image(self, image, path):
@@ -179,7 +181,7 @@ class Builder:
 
     def compile_charger_entry(self):
         target = self.output / "classic-charger-entry"
-        self.run(["aarch64-linux-gnu-gcc", "-nostdlib", "-static", "-fno-builtin",
+        self.run(["aarch64-linux-gnu-gcc", "-nostdlib", "-static", "-ffreestanding", "-fno-builtin",
                   "-fno-stack-protector", "-fno-pie", "-no-pie", "-Os", "-Wl,-e,_start",
                   "-Wl,--build-id=none", "-Wl,-z,max-page-size=4096", "-s", "-o", target,
                   ROOT / "device/classic-charger-entry.c"])

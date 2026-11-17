@@ -25,11 +25,13 @@ __attribute__((noreturn)) void charger_entry(long *stack) {
         call(SYS_DUP3, fd, 2, 0, 0);
         if (fd > 2) call(SYS_CLOSE, fd, 0, 0, 0);
     }
-    const char message[] = "<6>ClassicChargerEntry: executing original Core charger\n";
+    static const char message[] = "<6>ClassicChargerEntry: executing original Core charger\n";
     call(SYS_WRITE, 2, (long)message, sizeof(message) - 1, 0);
-    char *argv[] = {"charger-core", (void *)0};
+    char *argv[2];
+    argv[0] = "charger-core";
+    argv[1] = (void *)0;
     call(SYS_EXECVE, (long)"/system/bin/charger-core", (long)argv, (long)environment, 0);
-    const char failed[] = "<3>ClassicChargerEntry: exec charger-core failed\n";
+    static const char failed[] = "<3>ClassicChargerEntry: exec charger-core failed\n";
     call(SYS_WRITE, 2, (long)failed, sizeof(failed) - 1, 0);
     call(SYS_EXIT, 127, 0, 0, 0);
     for (;;) {}
