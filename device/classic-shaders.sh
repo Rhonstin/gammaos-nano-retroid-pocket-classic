@@ -35,10 +35,14 @@ ra_ready() {
 }
 
 # Filter names and paths come from this fixed table, not from user settings.
-if [ ! -f "$state/shaders-ra-v1" ] && ra_ready; then
+if [ ! -f "$state/shaders-ra-v2" ] && ra_ready; then
 default_driver=$(config_value video_driver "$cfg")
 while IFS='|' read -r core preset; do
     [ -n "$core" ] || continue
+    # On a dev.24 installation only migrate GBA presets we previously wrote.
+    if [ -f "$state/shaders-ra-v1" ] && [ "$preset" != handheld/lcd-grid-v2-gba-color ]; then
+        continue
+    fi
     folder="$config/$core"
     [ ! -L "$folder" ] || continue
     override="$folder/$core.cfg"
@@ -59,6 +63,10 @@ while IFS='|' read -r core preset; do
     [ ! -L "$file" ] || continue
     repair=0
     if [ -f "$file" ]; then
+        previous="#reference \"$ra/shaders/shaders_$format/handheld/lcd-grid-v2.${format}p\""
+        if [ "$preset" = handheld/lcd-grid-v2-gba-color ] && [ "$(cat "$file")" = "$previous" ]; then
+            repair=1
+        else
         case "$core:$format" in
             mGBA:slang|SwanStation:slang)
                 broken='#reference "/data/user/0/com.retroarch.aarch64/shaders/SHARP_SHIMMERLESS.slangp"'
@@ -67,6 +75,10 @@ while IFS='|' read -r core preset; do
                 repair=1;;
             *) continue;;
         esac
+        fi
+    elif [ -f "$state/shaders-ra-v1" ]; then
+        # A deleted preset on an already configured device is intentional.
+        continue
     elif [ -e "$folder/$core.slangp" ] || [ -e "$folder/$core.glslp" ]; then
         continue
     fi
@@ -102,10 +114,10 @@ Gambatte|handheld/lcd-grid-v2
 SameBoy|handheld/lcd-grid-v2
 Gearboy|handheld/lcd-grid-v2
 TGB Dual|handheld/lcd-grid-v2
-mGBA|handheld/lcd-grid-v2
-gpSP|handheld/lcd-grid-v2
-VBA-M|handheld/lcd-grid-v2
-VBA Next|handheld/lcd-grid-v2
+mGBA|handheld/lcd-grid-v2-gba-color
+gpSP|handheld/lcd-grid-v2-gba-color
+VBA-M|handheld/lcd-grid-v2-gba-color
+VBA Next|handheld/lcd-grid-v2-gba-color
 Gearsystem|interpolation/sharp-bilinear
 Beetle Lynx|handheld/lcd-grid-v2
 Handy|handheld/lcd-grid-v2
@@ -142,7 +154,7 @@ Beetle PSX|interpolation/sharp-bilinear
 SwanStation|interpolation/sharp-bilinear
 FAKE-08|interpolation/sharp-bilinear
 PRESETS
-    touch "$state/shaders-ra-v1"
+    touch "$state/shaders-ra-v1" "$state/shaders-ra-v2"
 fi
 
 # PPSSPP 1.20.3 has a built-in output-resolution scaler. Leave customized
