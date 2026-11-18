@@ -19,6 +19,7 @@ if [ -d "$retro" ] && [ -f "$cfg" ]; then
     restorecon "$cfg" || exit 1
 fi
 
+/system/bin/sh /system/bin/classic-apps.sh || log -t ClassicProvision "Application setup will retry on next boot"
 /system/bin/sh /system/bin/classic-shaders.sh || log -t ClassicProvision "Shader setup will retry on next boot"
 
 if ! pm path "$PACKAGE" | grep -q '^package:'; then

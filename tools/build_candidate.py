@@ -205,6 +205,95 @@ class Builder:
             raise RuntimeError("Charger ioctl diagnostic is not an arm64 shared ELF")
         return data
 
+    def write_large_file(self, image, path, host_file, exists, mode="0100644",
+                         context="u:object_r:system_file:s0"):
+        """Stream a large input into the image and verify it by SHA-256 readback."""
+        label = self.output / "integration" / "large.label"
+        label.parent.mkdir(parents=True, exist_ok=True)
+        label.write_bytes(context.encode() + b"\0")
+        commands = ([f"rm {path}"] if exists else []) + [
+            f'write "{host_file}" {path}',
+            f"set_inode_field {path} mode {mode}",
+            f"set_inode_field {path} uid 0",
+            f"set_inode_field {path} gid 0",
+            f'ea_set -f "{label}" {path} security.selinux',
+        ]
+        batch = self.output / "debugfs.commands"
+        batch.write_text("\n".join(commands) + "\n")
+        self.run(["debugfs", "-w", "-f", batch, image])
+        readback = self.output / "integration" / "readback.tmp"
+        readback.unlink(missing_ok=True)
+        self.run(["debugfs", "-R", f'dump {path} "{readback}"', image])
+        expected = sha256(Path(host_file))
+        if not readback.exists() or sha256(readback) != expected:
+            raise RuntimeError(f"Image readback differs: {path}")
+        readback.unlink()
+        attrs = self.run(["debugfs", "-R", f"ea_get {path} security.selinux", image])
+        if context.encode() not in attrs:
+            raise RuntimeError(f"Unexpected SELinux context for {path}")
+        return expected
+
+    def integrate_applications(self, image):
+        """Update and add the applications and RetroArch payload pinned in apps.lock.json."""
+        sys.path.insert(0, str(ROOT / "tools"))
+        import retroarch_payload
+        lock = json.loads((ROOT / "apps.lock.json").read_text())
+        cache = ROOT / "downloads/apps"
+        for entry in lock["apps"] + lock.get("files", []):
+            path = cache / entry["file"]
+            if path.stat().st_size != entry["size"] or sha256(path) != entry["sha256"]:
+                raise RuntimeError(f"Application input mismatch: {entry['file']}; run tools/prepare_apps.py --download")
+        # setup.sh installs the stock application set by file name on first boot.
+        setup = self.read_image(image, "/system/bin/setup.sh")
+        for entry in lock["apps"]:
+            if "setup_reference" not in entry:
+                continue
+            old = ("/system/etc/" + entry["setup_reference"]).encode()
+            if setup.count(old) != 1:
+                raise RuntimeError(f"setup.sh reference changed: {old.decode()}")
+            setup = setup.replace(old, entry["image_path"].encode())
+        self.replace_file(image, "/system/bin/setup.sh", setup, "0100755",
+                          context="u:object_r:gammaossetupwizard_exec:s0", gid=2000)
+        self.create_directory(image, "/system/etc/classic-apps")
+        installed = []
+        for entry in lock["apps"]:
+            replaced = entry.get("replaces")
+            if replaced and replaced != entry["image_path"]:
+                self.run(["debugfs", "-w", "-R", f"rm {replaced}", image])
+            digest = self.write_large_file(image, entry["image_path"], cache / entry["file"],
+                                           exists=(replaced == entry["image_path"]))
+            installed.append({key: entry[key] for key in ("id", "package", "version", "version_code",
+                                                          "image_path", "license", "role")}
+                             | {"sha256": digest})
+        # Pinned non-APK inputs (e.g. the Turnip driver package for Eden).
+        extra, created = [], set()
+        for entry in lock.get("files", []):
+            directory = entry["image_path"].rsplit("/", 1)[0]
+            if directory not in created:
+                self.create_directory(image, directory)
+                created.add(directory)
+            digest = self.write_large_file(image, entry["image_path"], cache / entry["file"], exists=False)
+            extra.append({key: entry[key] for key in ("id", "image_path", "license")} | {"sha256": digest})
+        listing = ["# id|package|versionCode|apk|grants  (generated from apps.lock.json)"]
+        listing += [f"{e['id']}|{e['package']}|{e['version_code']}|{e['image_path']}|{','.join(e['grants'])}"
+                    for e in lock["apps"]]
+        # RetroArch first-boot payload with the pinned nightly cores and frontend assets.
+        original = self.output / "retroarch.orig.tar.xz"
+        self.run(["debugfs", "-R", f'dump /system/etc/retroarch.tar.xz "{original}"', image])
+        rebuilt = self.output / "retroarch.tar.xz"
+        stats = retroarch_payload.build(original, rebuilt, lock, cache)
+        payload_digest = self.write_large_file(image, "/system/etc/retroarch.tar.xz", rebuilt, exists=True)
+        original.unlink()
+        rebuilt.unlink()
+        return {"applications": installed,
+                "files": extra,
+                "retained": lock["retained"],
+                "retroarch_payload": {"sha256": payload_digest, "members": stats,
+                                      "cores": len(lock["retroarch_payload"]["cores"]),
+                                      "assets": [a["file"] for a in lock["retroarch_payload"]["assets"]]},
+                "list": ("\n".join(listing) + "\n").encode(),
+                "setup": setup}
+
     def create_directory(self, image, path):
         """Create a labelled directory and catch debugfs' silent command errors."""
         label = self.output / "directory.label"
@@ -290,6 +379,19 @@ class Builder:
                 padding = (-(30 + len(entry.filename) + 4)) % 4
                 entry.extra = struct.pack("<HH", 0xD935, padding) + b"\0" * padding
                 archive.writestr(entry, (state_helper / "classes.dex").read_bytes())
+            systems_helper = self.output / "systems-helper"
+            systems_helper.mkdir()
+            self.run(["javac", "--release", "8", "-d", systems_helper,
+                      ROOT / "tools/android/ClassicSystems.java"])
+            self.run(["java", "-cp", r8, "com.android.tools.r8.D8", "--min-api", "26",
+                      "--output", systems_helper, *sorted(systems_helper.glob("*.class"))])
+            systems_jar = systems_helper / "classic-systems.jar"
+            with zipfile.ZipFile(systems_jar, "w") as archive:
+                entry = zipfile.ZipInfo("classes.dex", (2025, 1, 1, 0, 0, 0))
+                padding = (-(30 + len(entry.filename) + 4)) % 4
+                entry.extra = struct.pack("<HH", 0xD935, padding) + b"\0" * padding
+                archive.writestr(entry, (systems_helper / "classes.dex").read_bytes())
+            json.loads((ROOT / "device/classic-systems.json").read_text())
             controller = self.read_image(ROOT / CLASSIC / "vendor_custom.img", "/bin/retroidpad")
             if hashlib.sha256(controller).hexdigest() != "8a1bb2395dbd3a01f8c52f3f1c6c785767f273213a2221b9ed207f494b8bddfb":
                 raise RuntimeError("Classic MCU bridge integrity mismatch")
@@ -299,7 +401,8 @@ class Builder:
             # Source ext4 uses shared_blocks. Unshare before removing or replacing
             # any inode, otherwise debugfs can free a block used by another file.
             with image.open("r+b") as stream:
-                stream.truncate(image.stat().st_size + 1024 ** 3)
+                # Headroom for the updated and added applications; resize2fs -M trims it.
+                stream.truncate(image.stat().st_size + 2 * 1024 ** 3)
             self.run(["resize2fs", "-f", image])
             self.run(["e2fsck", "-fy", "-E", "unshare_blocks", image], accepted=(0, 1))
             stats = self.run(["debugfs", "-R", "stats", image])
@@ -389,6 +492,33 @@ class Builder:
             init_path = "/system/etc/init/hw/init.rc"
             init_script = classic_charger_dispatch(classic_power_dispatch(self.read_image(image, init_path)))
             self.replace_file(image, init_path, init_script, "0100644")
+            applications = self.integrate_applications(image)
+            integrated.update({
+                "/system/bin/classic-apps.sh": ((ROOT / "device/classic-apps.sh").read_bytes(), "0100755"),
+                "/system/etc/classic-apps.list": (applications["list"], "0100644"),
+                "/system/etc/classic-systems.json": ((ROOT / "device/classic-systems.json").read_bytes(), "0100644"),
+                "/system/etc/classic-retroarch-payload.sha256":
+                    ((applications["retroarch_payload"]["sha256"] + "\n").encode(), "0100644"),
+                "/system/framework/classic-systems.jar": (systems_jar.read_bytes(), "0100644"),
+            })
+            profiles = sorted((ROOT / "device/profiles-src").glob("*/profile.json"))
+            if profiles:
+                self.create_directory(image, "/system/etc/classic-profiles")
+            for manifest in profiles:
+                emulator_profile = json.loads(manifest.read_text())
+                package = emulator_profile["package"]
+                if manifest.parent.name != package or not emulator_profile["marker"].startswith("/data/"):
+                    raise RuntimeError(f"Invalid emulator profile: {manifest}")
+                base = "/system/etc/classic-profiles/" + package
+                self.create_directory(image, base)
+                lines = ["marker|" + emulator_profile["marker"]]
+                for target, source in emulator_profile["files"].items():
+                    allowed = (f"/data/user/0/{package}/", f"/data/media/0/Android/data/{package}/", "/data/media/0/")
+                    if not target.startswith(allowed) or "/" in source or "|" in target + source:
+                        raise RuntimeError(f"Invalid profile entry {target} in {manifest}")
+                    integrated[f"{base}/{source}"] = ((manifest.parent / source).read_bytes(), "0100644")
+                    lines.append(f"{target}|{source}")
+                integrated[f"{base}/profile.list"] = (("\n".join(lines) + "\n").encode(), "0100644")
             for path, (contents, mode) in integrated.items():
                 self.replace_file(image, path, contents, mode, exists=False)
             self.run(["e2fsck", "-fy", image], accepted=(0, 1))
@@ -456,6 +586,8 @@ class Builder:
                 "binary_integration": {"file": "/system/bin/gammaos-nano",
                     "method": "equal-length Qualcomm platform literal bengal -> parrot in .rodata",
                     "offset": "0x38d2f", "sha256": hashlib.sha256(nano_binary).hexdigest()},
+                "application_integration": {key: applications[key] for key in
+                                            ("applications", "files", "retained", "retroarch_payload")},
                 "hardware_boot_verified": False, "ready_for_flash": False,
                 "required_classic_reference": CLASSIC,
                 "inputs": lock, "artifacts": artifacts,

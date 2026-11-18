@@ -8,7 +8,11 @@ The port uses the original native Nano interface and emulator integration.
 original Classic. Off-mode battery animation, screen blank/wake and manual
 long-Power return to Nano have been confirmed by the owner. USB OTG storage
 remains untested. Rev Q (`<0x1000b 0>`) is not supported by this profile.
-Dev.24 adds emulator shader defaults to the setup flow.
+Dev.24 adds emulator shader defaults to the setup flow. **Dev.26–28** (installed and
+validated on the Classic) updates the bundled applications and RetroArch cores and adds Steam
+(DroidDeck), PS2, GameCube, Wii, 3DS and Saturn entries to Nano's Game column. A Switch
+entry appears once the owner installs Eden, which the image does not ship (dev.29+) —
+see [Applications and game systems](docs/APPS.md).
 
 This repository integrates pinned public release images; it is **not a complete
 AOSP source build**. It retains the Classic vendor/kernel and existing unlocked
@@ -17,6 +21,15 @@ bootloader. The resulting image uses an AVB integrity hashtree with authenticati
 
 ![Native Nano on the original Pocket Classic](assets/nano-home.png)
 
+## What is and is not in the image
+
+Everything bundled is open-source or freely redistributable software in unmodified
+upstream form, pinned by SHA-256 with its licence (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)).
+The image and this repository contain **no** console BIOS or firmware, no encryption
+keys, no games, ROMs or disc images, and no Switch emulator. Those come only from the
+owner's own hardware and purchases; validation used free homebrew and the owner's own
+dumps, which are not published.
+
 ## Start here
 
 - [Build the image](docs/BUILDING.md)
@@ -24,6 +37,8 @@ bootloader. The resulting image uses an AVB integrity hashtree with authenticati
 - [Hardware validation and known limits](docs/VALIDATION.md)
 - [Integration architecture](docs/ARCHITECTURE.md)
 - [Dev.24 emulator display defaults](docs/SHADERS.md)
+- [Dev.26 applications, emulators and Nano game systems](docs/APPS.md)
+- [Games that need only a d-pad](docs/GAMES.md)
 - [NFS compatibility fixes](docs/NFS.md)
 - [Prepare a GitHub publication](docs/PUBLISHING.md)
 - [Коротко українською](docs/README.uk.md)
@@ -51,6 +66,7 @@ On Linux, install the [documented prerequisites](docs/BUILDING.md), then run:
 ```sh
 python3 tools/prepare_references.py --download
 python3 tools/prepare_android_tools.py --download
+python3 tools/prepare_apps.py --download
 python3 tools/build_candidate.py --output out/my-candidate
 python3 -m unittest discover -s tests -v
 ```

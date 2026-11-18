@@ -1,0 +1,263 @@
+{
+  "description": "Extra Nano game systems for the Pocket Classic port, merged by ClassicSystems into /data/system/nano_systems.json. Launch templates use only the tokens Nano 1.4.1 substitutes ({file.uri}, {file.path}, {file.mime}); the framework grants the target read access to the {file.uri} content URI.",
+  "systems": [
+    {
+      "id": "steam",
+      "requiresPackage": "com.droiddeck.launcher",
+      "builtin": false,
+      "enabled": true,
+      "displayName": "Steam Games",
+      "shortname": "STEAM",
+      "romDir": "steam",
+      "launchType": "custom-package",
+      "coreSo": "",
+      "package": "com.droiddeck.launcher",
+      "launchArgs": "",
+      "intentTemplate": "-n com.droiddeck.launcher/.MainActivity -a android.intent.action.VIEW -d {file.uri}",
+      "scanSources": [
+        {
+          "type": "rawpath",
+          "value": "/data/media/0/ROMs/steam"
+        }
+      ],
+      "extensions": [
+        ".steam"
+      ],
+      "icon": {
+        "ref": "retroarch:IBM_-_PC_and_Compatibles",
+        "tintR": 1,
+        "tintG": 1,
+        "tintB": 1
+      }
+    },
+    {
+      "id": "ps2",
+      "requiresPackage": "com.armsx2",
+      "builtin": false,
+      "enabled": true,
+      "displayName": "PlayStation 2",
+      "shortname": "PS2",
+      "romDir": "ps2",
+      "launchType": "custom-package",
+      "coreSo": "",
+      "package": "com.armsx2",
+      "launchArgs": "",
+      "intentTemplate": "-n com.armsx2/.MainActivity -a android.intent.action.VIEW -d {file.uri} --activity-clear-task --activity-clear-top",
+      "scanSources": [
+        {
+          "type": "rawpath",
+          "value": "/data/media/0/ROMs/ps2"
+        }
+      ],
+      "extensions": [
+        ".iso",
+        ".chd",
+        ".cso",
+        ".zso",
+        ".gz",
+        ".cue",
+        ".elf"
+      ],
+      "icon": {
+        "ref": "retroarch:Sony_-_PlayStation_2",
+        "tintR": 1,
+        "tintG": 1,
+        "tintB": 1
+      }
+    },
+    {
+      "id": "gc",
+      "requiresPackage": "org.dolphinemu.dolphinemu",
+      "builtin": false,
+      "enabled": true,
+      "displayName": "GameCube",
+      "shortname": "GC",
+      "romDir": "gc",
+      "launchType": "custom-package",
+      "coreSo": "",
+      "package": "org.dolphinemu.dolphinemu",
+      "launchArgs": "",
+      "intentTemplate": "-n org.dolphinemu.dolphinemu/.ui.main.MainActivity -a android.intent.action.VIEW -d {file.uri} -e AutoStartFile {file.uri}",
+      "scanSources": [
+        {
+          "type": "rawpath",
+          "value": "/data/media/0/ROMs/gc"
+        }
+      ],
+      "extensions": [
+        ".iso",
+        ".gcm",
+        ".gcz",
+        ".rvz",
+        ".ciso",
+        ".dol",
+        ".elf",
+        ".m3u"
+      ],
+      "icon": {
+        "ref": "retroarch:Nintendo_-_GameCube",
+        "tintR": 1,
+        "tintG": 1,
+        "tintB": 1
+      }
+    },
+    {
+      "id": "wii",
+      "requiresPackage": "org.dolphinemu.dolphinemu",
+      "builtin": false,
+      "enabled": true,
+      "displayName": "Wii",
+      "shortname": "WII",
+      "romDir": "wii",
+      "launchType": "custom-package",
+      "coreSo": "",
+      "package": "org.dolphinemu.dolphinemu",
+      "launchArgs": "",
+      "intentTemplate": "-n org.dolphinemu.dolphinemu/.ui.main.MainActivity -a android.intent.action.VIEW -d {file.uri} -e AutoStartFile {file.uri}",
+      "scanSources": [
+        {
+          "type": "rawpath",
+          "value": "/data/media/0/ROMs/wii"
+        }
+      ],
+      "extensions": [
+        ".iso",
+        ".wbfs",
+        ".rvz",
+        ".wia",
+        ".gcz",
+        ".ciso",
+        ".wad",
+        ".dol",
+        ".elf"
+      ],
+      "icon": {
+        "ref": "retroarch:Nintendo_-_Wii",
+        "tintR": 1,
+        "tintG": 1,
+        "tintB": 1
+      }
+    },
+    {
+      "id": "3ds",
+      "requiresPackage": "org.azahar_emu.azahar",
+      "builtin": false,
+      "enabled": true,
+      "displayName": "Nintendo 3DS",
+      "shortname": "3DS",
+      "romDir": "n3ds",
+      "launchType": "custom-package",
+      "coreSo": "",
+      "package": "org.azahar_emu.azahar",
+      "launchArgs": "",
+      "intentTemplate": "-n org.azahar_emu.azahar/org.citra.citra_emu.activities.EmulationActivity -a android.intent.action.VIEW -d {file.uri} -t application/octet-stream --activity-clear-task --activity-clear-top",
+      "scanSources": [
+        {
+          "type": "rawpath",
+          "value": "/data/media/0/ROMs/n3ds"
+        }
+      ],
+      "extensions": [
+        ".3ds",
+        ".cci",
+        ".cxi",
+        ".3dsx",
+        ".app",
+        ".zcci",
+        ".zcxi",
+        ".z3dsx"
+      ],
+      "icon": {
+        "ref": "retroarch:Nintendo_-_Nintendo_3DS",
+        "tintR": 1,
+        "tintG": 1,
+        "tintB": 1
+      }
+    },
+    {
+      "id": "switch",
+      "requiresPackage": "dev.legacy.eden_emulator",
+      "builtin": false,
+      "enabled": true,
+      "displayName": "Nintendo Switch",
+      "shortname": "NSW",
+      "romDir": "switch",
+      "launchType": "custom-package",
+      "coreSo": "",
+      "package": "dev.legacy.eden_emulator",
+      "launchArgs": "",
+      "intentTemplate": "-n dev.legacy.eden_emulator/org.yuzu.yuzu_emu.activities.EmulationActivity -a android.intent.action.VIEW -d {file.uri} -t application/octet-stream --activity-clear-task --activity-clear-top",
+      "scanSources": [
+        {
+          "type": "rawpath",
+          "value": "/data/media/0/ROMs/switch"
+        }
+      ],
+      "extensions": [
+        ".nsp",
+        ".xci",
+        ".nro",
+        ".nso",
+        ".nca"
+      ],
+      "icon": {
+        "ref": "retroarch:Nintendo_-_Switch",
+        "tintR": 1,
+        "tintG": 1,
+        "tintB": 1
+      }
+    },
+    {
+      "id": "saturn",
+      "requiresCore": "yabasanshiro_libretro_android.so",
+      "builtin": false,
+      "enabled": true,
+      "displayName": "Sega Saturn",
+      "shortname": "SAT",
+      "romDir": "saturn",
+      "launchType": "libretro-core",
+      "coreSo": "yabasanshiro_libretro_android.so",
+      "package": "",
+      "launchArgs": "",
+      "intentTemplate": "",
+      "scanSources": [
+        {
+          "type": "rawpath",
+          "value": "/data/media/0/ROMs/saturn"
+        }
+      ],
+      "extensions": [
+        ".cue",
+        ".chd",
+        ".ccd",
+        ".iso",
+        ".mds",
+        ".m3u"
+      ],
+      "icon": {
+        "ref": "retroarch:Sega_-_Saturn",
+        "tintR": 1,
+        "tintG": 1,
+        "tintB": 1
+      }
+    }
+  ],
+  "migrations": [
+    {
+      "id": "psx",
+      "field": "coreSo",
+      "from": "pcsx_rearmed_libretro_android.so",
+      "to": "swanstation_libretro_android.so",
+      "whenCore": "swanstation_libretro_android.so",
+      "whenAnyFile": [
+        "/data/media/0/RetroArch/system/scph5501.bin",
+        "/data/media/0/RetroArch/system/scph5500.bin",
+        "/data/media/0/RetroArch/system/scph5502.bin",
+        "/data/media/0/RetroArch/system/scph1001.bin",
+        "/data/media/0/RetroArch/system/scph7001.bin",
+        "/data/media/0/RetroArch/system/scph101.bin",
+        "/data/media/0/RetroArch/system/ps1_rom.bin"
+      ]
+    }
+  ]
+}

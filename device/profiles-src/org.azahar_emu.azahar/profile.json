@@ -1,0 +1,8 @@
+{
+  "package": "org.azahar_emu.azahar",
+  "description": "Touch overlay hidden for the physical controls. Azahar's own first-run wizard still asks for its user folder (a Storage Access Framework grant).",
+  "marker": "/data/user/0/org.azahar_emu.azahar/shared_prefs/org.azahar_emu.azahar_preferences.xml",
+  "files": {
+    "/data/user/0/org.azahar_emu.azahar/shared_prefs/org.azahar_emu.azahar_preferences.xml": "org.azahar_emu.azahar_preferences.xml"
+  }
+}

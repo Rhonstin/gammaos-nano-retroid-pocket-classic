@@ -1,0 +1,10 @@
+{
+  "package": "org.dolphinemu.dolphinemu",
+  "description": "GammaPad (Xbox Wireless Controller) mapped to GameCube pad 1 and Wii Remote 1 + Nunchuk; touch overlay hidden; analytics declined.",
+  "marker": "/data/media/0/Android/data/org.dolphinemu.dolphinemu/files/Config/GCPadNew.ini",
+  "files": {
+    "/data/media/0/Android/data/org.dolphinemu.dolphinemu/files/Config/Dolphin.ini": "Dolphin.ini",
+    "/data/media/0/Android/data/org.dolphinemu.dolphinemu/files/Config/GCPadNew.ini": "GCPadNew.ini",
+    "/data/media/0/Android/data/org.dolphinemu.dolphinemu/files/Config/WiimoteNew.ini": "WiimoteNew.ini"
+  }
+}

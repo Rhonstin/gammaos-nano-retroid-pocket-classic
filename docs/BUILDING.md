@@ -29,6 +29,7 @@ Run from the repository root:
 ```sh
 python3 tools/prepare_references.py --download
 python3 tools/prepare_android_tools.py --download
+python3 tools/prepare_apps.py --download
 python3 tools/build_candidate.py --output out/my-candidate
 python3 -m unittest discover -s tests -v
 ```
@@ -36,7 +37,9 @@ python3 -m unittest discover -s tests -v
 `--output` must be a new directory. The reference tool verifies the public archive
 passwords/digests in `release-inputs.json`, extracts them into `out/`, and checks
 the image hashes in `artifact-inputs.json`. The Android tool lock pins R8 and
-optional SDK inputs. No private device backup is used to build `system.img`.
+optional SDK inputs. `apps.lock.json` pins the bundled applications, libretro cores
+and RetroArch assets (about 1.3 GB in `downloads/apps`; see [APPS](APPS.md)).
+The build needs roughly 10 GB free for its output. No private device backup is used to build `system.img`.
 
 The builder copies the reference image, removes its old footer, expands ext4,
 unshares shared blocks, preserves file ownership/SELinux labels, integrates the

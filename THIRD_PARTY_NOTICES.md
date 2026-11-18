@@ -11,6 +11,7 @@ It does not replace existing notices or license downloaded firmware/software.
 | GammaOS Core / Classic inputs | Public releases pinned in `release-inputs.json`; their components retain their own licenses |
 | Android build tools | R8 and optional SDK inputs pinned in `android-tools.lock.json`; upstream terms apply |
 | Research source subset | GammaOS source pinned by `upstream.lock.json`; original file notices retained on download |
+| Bundled applications (dev.26+) | Unmodified upstream APKs and libretro builds pinned in `apps.lock.json` with their licenses: RetroArch and cores (GPL-3.0 and per-core terms), PPSSPP (GPL-2.0+), Flycast (GPL-2.0), Aurora Store (GPL-3.0), Firefox (MPL-2.0), DroidDeck (GPL-3.0), ARMSX2 (GPL-3.0+), Dolphin (GPL-2.0+), Azahar (GPL-2.0+), Vita3K (GPL-2.0+); Mesa Turnip driver package (MIT). Eden is not redistributed from dev.29 on (owner-installed). Source is available from each upstream project |
 
 Upstream sources:
 
