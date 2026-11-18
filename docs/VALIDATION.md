@@ -25,9 +25,12 @@ contains selected results and artifact hashes without those identifiers.
 | VINTF | All nine runtime summary gates passed on dev.12; vendor/kernel/HAL XML retained in dev.23 |
 | Host regression tests | 31 passed with the pinned Core reference: 25 port checks and six release-integrity checks; CI without references explicitly skips two pinned-library checks |
 
-## Dev.29 (built, not flashed)
+## Dev.29 installed (flashed 2026-11-18)
 
-Dev.29 removes Eden from the image; the owner installs it (see [APPS](APPS.md)). Nano's
+After `update_classic.py --raw --execute` the console reports `1.4.1-dev.29` and the
+full `system_a` SHA-256 equals the image (`d048be34…c0e8`); userdata was kept.
+`/system/etc/classic-apps` holds no Eden APK. The owner-installed Eden stayed installed,
+so Nano keeps its Nintendo Switch entry. Dev.29 removes Eden from the image; the owner installs it (see [APPS](APPS.md)). Nano's
 Switch entry, the Turnip driver and the Eden defaults stay and activate only when
 `dev.legacy.eden_emulator` is installed. The installed console keeps its owner-installed
 Eden, so the Switch results below remain valid for that setup.
