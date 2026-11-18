@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "version": "1.4.1-dev.29",
+  "validated_on": "2026-11-18",
+  "target": "Original four-button Retroid Pocket Classic, board <0x22 0>",
+  "hardware": {
+    "codename": "parrot",
+    "board_id": [
+      34,
+      0
+    ],
+    "soc": "SG4250P",
+    "vendor_mapping": "32.0",
+    "kernel": "5.10.209-android12"
+  },
+  "method": "Pinned public Core 1.4.1 image integration, not an AOSP source build",
+  "artifacts": {
+    "system.img": {
+      "size": 3381280768,
+      "sha256": "d048be347cafe31f601b3882fc2f170eea789eaa7fc1f5256ba8047a40a0c0e8"
+    },
+    "system.sparse.img": {
+      "size": 3333914528,
+      "sha256": "c4a9e271b4efbf491496550019705be7cc1c7185c9159e5307417c53baa72c4c"
+    }
+  },
+  "avb_authentication": "NONE",
+  "validated": {
+    "permanent_native_boot": true,
+    "full_system_partition_hash_match": true,
+    "userdata_retained_by_updater": true,
+    "steam_droiddeck_game_launch_from_nano": true,
+    "ps1_swanstation_quick_resume_after_restart": true,
+    "ps2_armsx2_bios_and_disc_boot": true,
+    "gamecube_wii_dolphin_rendering": true,
+    "n3ds_azahar_homebrew": true,
+    "saturn_yabasanshiro_bios_and_disc": true,
+    "gba_psp_dreamcast_regression": true,
+    "switch_owner_installed_eden_commercial_title": true,
+    "host_tests": 44
+  },
+  "remaining_validation": [
+    "Real USB OTG storage medium/adapter unavailable; not tested",
+    "Eden (Switch) is not included; owner installs it, see docs/APPS.md"
+  ],
+  "known_limits": [
+    "Tested on one original Classic; Rev Q excluded",
+    "NFS 32KiB transfer workaround is not general RPC fragment reassembly",
+    "Core uses implicit FTPS, not explicit AUTH TLS",
+    "GammaBrowser cleartext HTTP is blocked",
+    "Full manufacturer factory restoration not tested",
+    "No BIOS, firmware, keys, games or disc images are included; owners supply their own",
+    "DroidDeck flags the Adreno 613 as below its tested hardware; Steam titles vary"
+  ]
+}
